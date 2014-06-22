@@ -59,28 +59,31 @@ namespace Flurl.Test.Http
 		[Test]
 		public async Task can_get_string() {
 			HttpTest.RespondWith("good job");
-
 			var data = await "http://some-api.com".GetStringAsync();
-
 			Assert.AreEqual("good job", data);
 		}
 
 		[Test]
 		public async Task can_get_stream() {
 			HttpTest.RespondWith("good job");
-
 			var data = await "http://some-api.com".GetStreamAsync();
-
 			Assert.AreEqual(new MemoryStream(Encoding.UTF8.GetBytes("good job")), data);
 		}
 
 		[Test]
 		public async Task can_get_bytes() {
 			HttpTest.RespondWith("good job");
-
 			var data = await "http://some-api.com".GetBytesAsync();
-
 			Assert.AreEqual(Encoding.UTF8.GetBytes("good job"), data);
+		}
+
+		[Test]
+		public async Task can_get_xdoc() {
+			HttpTest.RespondWith("<root><data attr=\"x\">A</data><data attr=\"y\">B</data></root>");
+			var xdoc = await "http://some-api.com".GetXmlAsync();
+			var data = xdoc.Element("root").Elements("data");
+			CollectionAssert.AreEqual(new[] { "A", "B" }, data.Select(d => d.Value).ToArray());
+			CollectionAssert.AreEqual(new[] { "x", "y" }, data.Select(d => d.Attribute("attr").Value).ToArray());
 		}
 
 		[Test]

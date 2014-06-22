@@ -3,6 +3,7 @@ using System.Dynamic;
 using System.IO;
 using System.Net.Http;
 using System.Threading.Tasks;
+using System.Xml.Linq;
 
 namespace Flurl.Http
 {
@@ -66,6 +67,17 @@ namespace Flurl.Http
 		/// <example>bytes = await url.PostAsync(data).ReceiveBytes()</example>
 		public static async Task<byte[]> ReceiveBytes(this Task<HttpResponseMessage> response) {
 			return await (await response).Content.ReadAsByteArrayAsync();
+		}
+
+		/// <summary>
+		/// Returns HTTP response body as an XDocument. Intended to chain off an async call.
+		/// </summary>
+		/// <returns>A Task whose result is the response body as a byte array.</returns>
+		/// <example>xdoc = await url.PostAsync(data).ReceiveXml()</example>
+		public static async Task<XDocument> ReceiveXml(this Task<HttpResponseMessage> response) {
+			using (var stream = await response.ReceiveStream()) {
+				return XDocument.Load(stream);
+			}
 		}
 	}
 }

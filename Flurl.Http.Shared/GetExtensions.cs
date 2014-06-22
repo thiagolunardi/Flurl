@@ -2,6 +2,7 @@
 using System.IO;
 using System.Net.Http;
 using System.Threading.Tasks;
+using System.Xml.Linq;
 
 namespace Flurl.Http
 {
@@ -176,6 +177,30 @@ namespace Flurl.Http
 		/// <returns>A Task whose result is the response body.</returns>
 		public static Task<byte[]> GetBytesAsync(this Url url) {
 			return new FlurlClient(url).GetBytesAsync();
-		}		
+		}
+
+		/// <summary>
+		/// Sends an asynchronous GET request and returns the response body as an XDocument.
+		/// </summary>
+		/// <returns>A Task whose result is the response body.</returns>
+		public static Task<XDocument> GetXmlAsync(this FlurlClient client) {
+			return client.GetAsync().ReceiveXml();
+		}
+
+		/// <summary>
+		/// Creates a FlurlClient from the URL and sends an asynchronous GET request and returns the response body as an XDocument.
+		/// </summary>
+		/// <returns>A Task whose result is the response body.</returns>
+		public static Task<XDocument> GetXmlAsync(this string url) {
+			return new FlurlClient(url).GetXmlAsync();
+		}
+
+		/// <summary>
+		/// Creates a FlurlClient from the URL and sends an asynchronous GET request and returns the response body as an XDocument.
+		/// </summary>
+		/// <returns>A Task whose result is the response body.</returns>
+		public static Task<XDocument> GetXmlAsync(this Url url) {
+			return new FlurlClient(url).GetXmlAsync();
+		}
 	}
 }
